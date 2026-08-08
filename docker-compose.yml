@@ -1,0 +1,22 @@
+services:
+  veil-garden:
+    build: .
+    restart: unless-stopped
+    init: true
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    environment:
+      VEIL_ACCESS_TOKEN: ${VEIL_ACCESS_TOKEN:?set VEIL_ACCESS_TOKEN}
+      VEIL_ALLOWED_HOSTS: "${VEIL_ALLOWED_HOSTS:-localhost,127.0.0.1}"
+    ports:
+      - "127.0.0.1:8768:8768"
+    volumes:
+      - veil_data:/data
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+
+volumes:
+  veil_data:

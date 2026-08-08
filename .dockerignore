@@ -1,0 +1,12 @@
+.git
+.github
+.venv
+__pycache__
+.ruff_cache
+build
+dist
+data
+*.sqlite3
+*.log
+docs/images
+tests

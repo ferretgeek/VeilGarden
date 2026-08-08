@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#eaf4ee" />
+    <meta name="description" content="隐邮花园：本地优先的 Hide My Email 地址整理工具。" />
+    <title>隐邮花园 · Veil Garden</title>
+    <link rel="icon" href="/favicon.svg?v=1.0.0" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico?v=1.0.0" sizes="any" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1.0.0" />
+    <link rel="stylesheet" href="/styles.css?v=1.0.0" />
+    <script src="/app.js?v=1.0.0" defer></script>
+  </head>
+  <body data-theme="sky">
+    <div class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="#top" aria-label="隐邮花园首页">
+          <img src="/favicon.svg?v=1.0.0" alt="" width="42" height="42" />
+          <span><strong>隐邮花园</strong><small>VEIL GARDEN</small></span>
+        </a>
+        <div class="top-actions">
+          <button class="icon-button" id="privacyButton" type="button" aria-label="揭开地址遮罩" title="隐私遮罩">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.6 12s3.4-6 9.4-6 9.4 6 9.4 6-3.4 6-9.4 6-9.4-6-9.4-6Z"/><circle cx="12" cy="12" r="2.7"/></svg>
+          </button>
+          <div class="theme-wrap">
+            <button class="icon-button" id="themeButton" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="选择主题，当前天青" title="全局主题">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18h1.1a1.7 1.7 0 0 0 .3-3.4l-.8-.1a1.6 1.6 0 0 1 .3-3.2H16A5 5 0 0 0 21 9c0-3.3-4-6-9-6Z"/><circle cx="7.5" cy="10" r="1"/><circle cx="10" cy="6.8" r="1"/><circle cx="15" cy="7" r="1"/></svg>
+            </button>
+            <div class="theme-menu" id="themeMenu" role="menu" hidden>
+              <button type="button" data-theme-choice="sky" role="menuitem"><i class="swatch sky"></i>天青 <span>Sky</span></button>
+              <button type="button" data-theme-choice="jade" role="menuitem"><i class="swatch jade"></i>翡翠 <span>Jade</span></button>
+              <button type="button" data-theme-choice="sunset" role="menuitem"><i class="swatch sunset"></i>晚霞 <span>Sunset</span></button>
+              <button type="button" data-theme-choice="graphite" role="menuitem"><i class="swatch graphite"></i>深灰 <span>Graphite</span></button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main id="top">
+        <section class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow"><span></span> OFFICIAL-WORKFLOW COMPANION</p>
+            <h1>把替你挡住身份的地址，<br /><em>种进自己的花园。</em></h1>
+            <p class="lead">不接触 Apple 密码，不替你登录。只把从官方界面取得的地址，安静地整理在自己的设备上。</p>
+            <div class="hero-actions">
+              <button class="primary-button" id="addButton" type="button">添一枚地址</button>
+              <button class="secondary-button" id="importButton" type="button">导入旧花圃</button>
+              <a class="text-link" id="officialLink" href="https://support.apple.com/guide/icloud/create-and-edit-addresses-mm1a876f7aed/icloud" target="_blank" rel="noreferrer">前往 Apple 官方页面 <span>↗</span></a>
+            </div>
+          </div>
+          <aside class="principle-card">
+            <span class="principle-number">01</span>
+            <p>Apple Account 凭据</p>
+            <strong>永不进入这里</strong>
+            <small>NO PASSWORDS · NO TOKENS · NO PRIVATE API</small>
+            <div class="line-art" aria-hidden="true"><i></i><i></i><i></i></div>
+          </aside>
+        </section>
+
+        <section class="stats-grid" aria-label="地址统计">
+          <article><span>全部枝叶</span><strong id="statTotal">—</strong><small>LOCAL RECORDS</small></article>
+          <article><span>正在使用</span><strong id="statActive">—</strong><small>ACTIVE</small></article>
+          <article><span>暂时休眠</span><strong id="statResting">—</strong><small>RESTING</small></article>
+          <article><span>等待命名</span><strong id="statUnlabeled">—</strong><small>UNLABELED</small></article>
+        </section>
+
+        <section class="workspace">
+          <div class="section-heading">
+            <div><p class="kicker">YOUR PRIVATE GARDEN</p><h2>地址花圃</h2></div>
+            <div class="filters">
+              <label class="search-field">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg>
+                <span class="sr-only">搜索地址、标签或备注</span>
+                <input id="searchInput" type="search" placeholder="搜索地址、标签或备注" autocomplete="off" />
+              </label>
+              <label class="select-field"><span class="sr-only">状态筛选</span><select id="statusFilter"><option value="all">全部状态</option><option value="active">正在使用</option><option value="resting">暂时休眠</option></select></label>
+            </div>
+          </div>
+
+          <div class="garden-layout">
+            <div class="table-panel">
+              <div class="table-meta"><span id="resultCount">0 枚地址</span><span id="privacyHint">地址默认遮罩</span></div>
+              <div class="alias-list" id="aliasList" aria-live="polite"></div>
+              <div class="empty-state" id="emptyState" hidden>
+                <svg viewBox="0 0 96 96" aria-hidden="true"><path d="M48 78V35M48 49c-15-2-24-10-27-24 16 0 25 7 27 21M48 60c14-2 23-10 27-23-15 0-24 7-27 20"/><path d="M28 78h40"/></svg>
+                <h3>这里还没有枝叶</h3><p>从 Apple 官方页面创建地址，再手动添加或批量导入。</p>
+                <button type="button" class="secondary-button" data-action="open-add">添加第一枚</button>
+              </div>
+            </div>
+
+            <aside class="activity-panel">
+              <div class="activity-head"><div><p class="kicker">QUIET HISTORY</p><h3>最近整理</h3></div><span class="live-dot" title="本地记录"></span></div>
+              <div id="eventList" class="event-list"></div>
+              <div class="local-note"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4 7v5c0 4.5 3.3 7.6 8 9 4.7-1.4 8-4.5 8-9V7l-8-4Z"/><path d="m9 12 2 2 4-5"/></svg><p><strong>只改变本地记录</strong><span>休眠、恢复或移除不会触碰 Apple 账户。</span></p></div>
+              <button class="export-button" id="exportButton" type="button"><span>带走一份副本</span><small>CSV · JSON · TXT</small><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 18v3h14v-3"/></svg></button>
+            </aside>
+          </div>
+        </section>
+      </main>
+
+      <footer><span>Veil Garden · 隐邮花园</span><p>Keep the address. Keep the boundary.</p><span id="modeLabel">LOCAL-FIRST</span></footer>
+    </div>
+
+    <div class="access-gate" id="accessGate" role="dialog" aria-modal="true" aria-labelledby="accessTitle" hidden>
+      <form class="gate-card" id="accessForm">
+        <img src="/favicon.svg?v=1.0.0" alt="" width="58" height="58" />
+        <p class="kicker">PRIVATE ENTRANCE</p><h2 id="accessTitle">回到自己的花园</h2>
+        <p>输入启动时显示的访问令牌。它只留在当前页面内存，不写入浏览器存储。</p>
+        <label>访问令牌<input id="tokenInput" type="password" autocomplete="off" spellcheck="false" required minlength="24" /></label>
+        <button class="primary-button" type="submit">打开花园</button>
+        <small id="accessError" role="alert"></small>
+      </form>
+    </div>
+
+    <dialog id="aliasDialog" class="form-dialog">
+      <form id="aliasForm" method="dialog">
+        <div class="dialog-head"><div><p class="kicker">LOCAL RECORD</p><h2 id="aliasDialogTitle">添一枚地址</h2></div><button class="close-button" type="button" data-close-dialog="aliasDialog" aria-label="关闭">×</button></div>
+        <input id="aliasId" type="hidden" />
+        <label class="full">地址<input id="addressInput" type="email" maxlength="320" autocomplete="off" placeholder="leaf@example.com" required /></label>
+        <label>名字 / 用途<input id="labelInput" type="text" maxlength="80" placeholder="例如：阅读订阅" /></label>
+        <label>本地状态<select id="aliasStatus"><option value="active">正在使用</option><option value="resting">暂时休眠</option></select></label>
+        <label class="full">标签<input id="tagsInput" type="text" maxlength="200" placeholder="阅读, 旅行, 账单" /></label>
+        <label class="full">备注<textarea id="noteInput" maxlength="500" rows="4" placeholder="只写帮助自己辨认的信息，避免放入密码或验证码。"></textarea></label>
+        <p class="form-note">这里的状态与 Apple 账户互不联动。</p>
+        <div class="dialog-actions"><button class="danger-link" id="removeButton" type="button" hidden>移除本地记录</button><span></span><button class="secondary-button" type="button" data-close-dialog="aliasDialog">取消</button><button class="primary-button" type="submit">保存</button></div>
+      </form>
+    </dialog>
+
+    <dialog id="importDialog" class="form-dialog narrow">
+      <form id="importForm" method="dialog">
+        <div class="dialog-head"><div><p class="kicker">BRING THEM HOME</p><h2>导入旧花圃</h2></div><button class="close-button" type="button" data-close-dialog="importDialog" aria-label="关闭">×</button></div>
+        <p class="dialog-copy">每行一个地址；也可写成 <code>地址 | 名字 | 标签1,标签2</code>。重复项会被安静跳过。</p>
+        <label class="file-drop">选择 TXT / CSV 文件<input id="importFile" type="file" accept=".txt,.csv,text/plain,text/csv" /></label>
+        <label class="full">或直接粘贴<textarea id="importText" rows="10" maxlength="262144" placeholder="quiet.leaf@example.com | 阅读订阅 | 阅读,每周"></textarea></label>
+        <p class="form-note" id="importPreview">等待输入</p>
+        <div class="dialog-actions"><span></span><button class="secondary-button" type="button" data-close-dialog="importDialog">取消</button><button class="primary-button" type="submit">开始导入</button></div>
+      </form>
+    </dialog>
+
+    <dialog id="exportDialog" class="form-dialog narrow">
+      <form id="exportForm" method="dialog">
+        <div class="dialog-head"><div><p class="kicker">PORTABLE COPY</p><h2>带走一份副本</h2></div><button class="close-button" type="button" data-close-dialog="exportDialog" aria-label="关闭">×</button></div>
+        <div class="option-grid"><label><input type="radio" name="exportFormat" value="csv" checked /><span><strong>CSV</strong><small>适合表格整理</small></span></label><label><input type="radio" name="exportFormat" value="json" /><span><strong>JSON</strong><small>完整结构备份</small></span></label><label><input type="radio" name="exportFormat" value="txt" /><span><strong>TXT</strong><small>一行一个地址</small></span></label></div>
+        <label class="toggle-line"><input id="fullExport" type="checkbox" /><span><strong>导出完整地址</strong><small>默认只导出遮罩后的副本</small></span></label>
+        <label id="exportConfirmWrap" hidden>输入 <code>EXPORT FULL</code> 确认<input id="exportConfirm" type="text" autocomplete="off" spellcheck="false" /></label>
+        <div class="dialog-actions"><span></span><button class="secondary-button" type="button" data-close-dialog="exportDialog">取消</button><button class="primary-button" type="submit">下载副本</button></div>
+      </form>
+    </dialog>
+
+    <dialog id="removeDialog" class="form-dialog narrow">
+      <form id="removeForm" method="dialog">
+        <div class="dialog-head"><div><p class="kicker danger">LOCAL REMOVAL</p><h2>移除这条本地记录？</h2></div><button class="close-button" type="button" data-close-dialog="removeDialog" aria-label="关闭">×</button></div>
+        <p class="dialog-copy">这不会停用 Apple 地址，但会从本地数据库永久移除。请先确认已有需要的备份。</p>
+        <label>输入下方短语确认<code id="removePhrase"></code><input id="removeConfirm" type="text" autocomplete="off" spellcheck="false" /></label>
+        <div class="dialog-actions"><span></span><button class="secondary-button" type="button" data-close-dialog="removeDialog">取消</button><button class="danger-button" type="submit">永久移除本地记录</button></div>
+      </form>
+    </dialog>
+
+    <div class="toast-region" id="toastRegion" aria-live="polite"></div>
+  </body>
+</html>
