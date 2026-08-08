@@ -2,7 +2,7 @@
 
 ## 1.0.1 — 2026-08-09
 
-- Drain bounded request bodies before rejecting cross-origin writes so Windows HTTP clients reliably receive the intended `403` response instead of an occasional connection reset.
+- Read authenticated write bodies once, within the 256 KiB limit, before Origin, content-type, and business validation so Windows HTTP clients reliably receive the intended error response instead of an occasional connection reset.
 - Repeat the cross-port rejection contract in tests and confirm that rejected requests cannot create local records.
 
 ## 1.0.0 — 2026-08-09

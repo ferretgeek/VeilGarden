@@ -156,51 +156,18 @@ class GardenHandler(BaseHTTPRequestHandler):
     def _write_guard(self) -> bool:
         fetch_site = (self.headers.get("Sec-Fetch-Site") or "").lower()
         if fetch_site not in {"", "none", "same-origin"}:
-            self._discard_request_body()
             self._error(HTTPStatus.FORBIDDEN, "cross-site request rejected")
             return False
         if not same_origin(self.headers.get("Origin"), self.headers.get("Host")):
-            self._discard_request_body()
             self._error(HTTPStatus.FORBIDDEN, "origin rejected")
             return False
         key = self.client_address[0]
         if not self.app.write_limiter.allow(key):
-            self._discard_request_body()
             self._error(HTTPStatus.TOO_MANY_REQUESTS, "write rate limit reached")
             return False
         return True
 
-    def _discard_request_body(self) -> None:
-        """Drain a bounded rejected body so Windows clients can receive the error response."""
-        raw_length = self.headers.get("Content-Length", "0")
-        try:
-            length = int(raw_length)
-        except ValueError:
-            self.close_connection = True
-            return
-        if length <= 0:
-            return
-        if length > MAX_REQUEST_BYTES:
-            self.close_connection = True
-            return
-        remaining = length
-        previous_timeout = self.connection.gettimeout()
-        self.connection.settimeout(2)
-        try:
-            while remaining:
-                chunk = self.rfile.read(min(remaining, 64 * 1024))
-                if not chunk:
-                    self.close_connection = True
-                    return
-                remaining -= len(chunk)
-        except OSError:
-            self.close_connection = True
-        finally:
-            self.connection.settimeout(previous_timeout)
-
-    def _json_body(self) -> dict[str, Any]:
-        if (self.headers.get("Content-Type") or "").split(";", 1)[0].strip().lower() != "application/json":
-            raise ValueError("application/json is required")
+    def _request_body(self) -> bytes:
         raw_length = self.headers.get("Content-Length", "")
         try:
             length = int(raw_length)
@@ -209,6 +176,13 @@ class GardenHandler(BaseHTTPRequestHandler):
         if not 0 <= length <= MAX_REQUEST_BYTES:
             raise ValueError("request body is too large")
         raw = self.rfile.read(length)
+        if len(raw) != length:
+            raise ValueError("incomplete request body")
+        return raw
+
+    def _json_body(self, raw: bytes) -> dict[str, Any]:
+        if (self.headers.get("Content-Type") or "").split(";", 1)[0].strip().lower() != "application/json":
+            raise ValueError("application/json is required")
         try:
             payload = json.loads(raw.decode("utf-8"))
         except (UnicodeDecodeError, json.JSONDecodeError) as exc:
@@ -363,16 +337,25 @@ class GardenHandler(BaseHTTPRequestHandler):
         self._write_request("DELETE")
 
     def _write_request(self, method: str) -> None:
-        if not self._host_ok() or not self._auth_ok() or not self._write_guard():
+        if not self._host_ok() or not self._auth_ok():
+            return
+        body = b""
+        if method in {"POST", "PATCH"}:
+            try:
+                body = self._request_body()
+            except ValueError as exc:
+                self._error(HTTPStatus.BAD_REQUEST, str(exc))
+                return
+        if not self._write_guard():
             return
         path = urlsplit(self.path).path
         try:
             if method == "POST" and path == "/api/aliases":
-                item = self.app.store.add(self._json_body())
+                item = self.app.store.add(self._json_body(body))
                 self._send_json(HTTPStatus.CREATED, {"ok": True, "alias": self._public(item, reveal=True)})
                 return
             if method == "POST" and path == "/api/import":
-                payload = self._json_body()
+                payload = self._json_body(body)
                 rows = payload.get("aliases")
                 if not isinstance(rows, list):
                     raise ValueError("aliases array required")
@@ -386,7 +369,7 @@ class GardenHandler(BaseHTTPRequestHandler):
                 if not alias_id or "/" in alias_id or len(alias_id) > 32:
                     raise ValueError("invalid identifier")
                 if method == "PATCH":
-                    item = self.app.store.update(alias_id, self._json_body())
+                    item = self.app.store.update(alias_id, self._json_body(body))
                     self._send_json(HTTPStatus.OK, {"ok": True, "alias": self._public(item, reveal=True)})
                     return
                 if method == "DELETE":
