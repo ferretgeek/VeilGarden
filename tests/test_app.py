@@ -125,13 +125,15 @@ class AppTests(unittest.TestCase):
         self.assertEqual(self.store.stats()["total"], 0)
 
     def test_cross_port_write_is_rejected(self) -> None:
-        status, _body, _headers = self.request(
-            "/api/aliases",
-            method="POST",
-            payload={"address": "leaf@example.com"},
-            headers={"Origin": "http://127.0.0.1:9", "Sec-Fetch-Site": "same-origin"},
-        )
-        self.assertEqual(status, 403)
+        for _attempt in range(3):
+            status, _body, _headers = self.request(
+                "/api/aliases",
+                method="POST",
+                payload={"address": "leaf@example.com"},
+                headers={"Origin": "http://127.0.0.1:9", "Sec-Fetch-Site": "same-origin"},
+            )
+            self.assertEqual(status, 403)
+        self.assertEqual(self.store.stats()["total"], 0)
 
     def test_options_does_not_grant_cors(self) -> None:
         status, _body, headers = self.request("/api/aliases", method="OPTIONS", auth=False)

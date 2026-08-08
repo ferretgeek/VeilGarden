@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1 — 2026-08-09
+
+- Drain bounded request bodies before rejecting cross-origin writes so Windows HTTP clients reliably receive the intended `403` response instead of an occasional connection reset.
+- Repeat the cross-port rejection contract in tests and confirm that rejected requests cannot create local records.
+
 ## 1.0.0 — 2026-08-09
 
 - Initial stable release.
@@ -9,4 +14,3 @@
 - Sky, Jade, Sunset, and Graphite themes with desktop and mobile layouts.
 - Local, Docker, systemd, SSH-tunnel, and HTTPS reverse-proxy deployment paths.
 - Explicit exclusion of Apple credentials, private APIs, and automated address creation.
-

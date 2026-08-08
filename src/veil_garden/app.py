@@ -156,16 +156,47 @@ class GardenHandler(BaseHTTPRequestHandler):
     def _write_guard(self) -> bool:
         fetch_site = (self.headers.get("Sec-Fetch-Site") or "").lower()
         if fetch_site not in {"", "none", "same-origin"}:
+            self._discard_request_body()
             self._error(HTTPStatus.FORBIDDEN, "cross-site request rejected")
             return False
         if not same_origin(self.headers.get("Origin"), self.headers.get("Host")):
+            self._discard_request_body()
             self._error(HTTPStatus.FORBIDDEN, "origin rejected")
             return False
         key = self.client_address[0]
         if not self.app.write_limiter.allow(key):
+            self._discard_request_body()
             self._error(HTTPStatus.TOO_MANY_REQUESTS, "write rate limit reached")
             return False
         return True
+
+    def _discard_request_body(self) -> None:
+        """Drain a bounded rejected body so Windows clients can receive the error response."""
+        raw_length = self.headers.get("Content-Length", "0")
+        try:
+            length = int(raw_length)
+        except ValueError:
+            self.close_connection = True
+            return
+        if length <= 0:
+            return
+        if length > MAX_REQUEST_BYTES:
+            self.close_connection = True
+            return
+        remaining = length
+        previous_timeout = self.connection.gettimeout()
+        self.connection.settimeout(2)
+        try:
+            while remaining:
+                chunk = self.rfile.read(min(remaining, 64 * 1024))
+                if not chunk:
+                    self.close_connection = True
+                    return
+                remaining -= len(chunk)
+        except OSError:
+            self.close_connection = True
+        finally:
+            self.connection.settimeout(previous_timeout)
 
     def _json_body(self) -> dict[str, Any]:
         if (self.headers.get("Content-Type") or "").split(";", 1)[0].strip().lower() != "application/json":
