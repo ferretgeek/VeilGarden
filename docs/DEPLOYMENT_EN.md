@@ -73,3 +73,14 @@ Adapt [`deploy/nginx.conf.example`](../deploy/nginx.conf.example) and configure 
 
 Before upgrading, keep an encrypted backup and record the current Git tag. After `git pull --ff-only`, reinstall, run the tests, restart the service, and verify both `/health` and the browser workflow. Roll back to a verified tag together with a compatible backup.
 
+## Restore, troubleshooting, and removal
+
+Stop writes before restoring, verify the backup and SQLite integrity, replace the database, restore service-account ownership, and then test `/health`, login, search, import, and export. The database and its backups are not an encrypted vault; keep them on encrypted storage with least privilege.
+
+- For `401`, re-enter the access token; the browser does not persist it.
+- For Host/Origin rejection, correct the exact allowlist and preserved original headers; never enable wildcard hosts or CORS.
+- For read-only/locked data, check for one service instance, ownership, free space, and SQLite temporary-file permissions.
+- Rejected imports must use the documented bounded CSV/JSON format and synthetic test data; never provide Apple credentials or account sessions.
+- Apple-side state is outside this app. Deactivate, restore, or delete aliases through Apple's official interface.
+
+Before removal, stop traffic/service and verify an encrypted backup. Run `docker compose down`; delete the named volume only after explicitly abandoning restore. For systemd, disable/remove the unit, proxy site, code, and environment file; delete `/var/lib/veil-garden` only when full addresses and notes are no longer needed. Revoke any exposed access token—file deletion cannot invalidate copied databases.
