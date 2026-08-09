@@ -23,6 +23,10 @@
   <img src="./docs/images/dashboard.png" alt="隐邮花园地址花圃实际界面" width="100%" />
 </p>
 
+<p align="center">
+  <img src="./docs/images/intro.png" alt="隐邮花园入口与产品边界设计" width="100%" />
+</p>
+
 - **整理而不接管：** 手动添加，或从 TXT / CSV 批量导入；不代替 Apple 登录和创建地址。
 - **默认守住边界：** 地址默认遮罩，完整导出必须输入精确确认短语；访问令牌只在当前页面内存中使用。
 - **真正可用：** 搜索、标签、备注、使用中/休眠状态、重复过滤、事件记录，以及 CSV / JSON / TXT 导出。
@@ -119,4 +123,3 @@ bandit -r src -ll
 ## 许可证
 
 原创代码以 [MIT License](./LICENSE) 发布。Apple、iCloud、iCloud+、Hide My Email 及相关标识属于各自权利人；本许可证不授予任何第三方品牌或服务的权利。
-

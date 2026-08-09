@@ -23,6 +23,10 @@ Veil Garden is a local-first organizer for user-provided Hide My Email addresses
   <img src="./docs/images/dashboard.png" alt="Veil Garden real address-garden interface" width="100%" />
 </p>
 
+<p align="center">
+  <img src="./docs/images/intro.png" alt="Veil Garden entry and product-boundary design" width="100%" />
+</p>
+
 - **Organize without taking over:** add records manually or import TXT / CSV; Apple sign-in and address creation stay with Apple.
 - **Private by default:** addresses are masked, full export requires an exact confirmation phrase, and the access token only lives in page memory.
 - **A complete workflow:** search, labels, notes, active/resting state, duplicate filtering, local events, and CSV / JSON / TXT export.
@@ -119,4 +123,3 @@ Release gates also cover pip-audit, detect-secrets, Gitleaks on the current tree
 ## License
 
 Original code is available under the [MIT License](./LICENSE). Apple, iCloud, iCloud+, Hide My Email, and related marks belong to their respective owners; this license grants no rights to third-party brands or services.
-

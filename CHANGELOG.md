@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Promoted the populated synthetic address garden to the profile and social preview, while retaining the full garden and entry composition as complementary README images.
+
 ## 1.0.1 — 2026-08-09
 
 - Read authenticated write bodies once, within the 256 KiB limit, before Origin, content-type, and business validation so Windows HTTP clients reliably receive the intended error response instead of an occasional connection reset.
