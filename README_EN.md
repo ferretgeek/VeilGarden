@@ -1,4 +1,4 @@
-# Veil Garden · 隐邮花园
+# Veil Garden / 隐邮花园 — Hide My Email Organizer
 
 <p align="center">
   <img src="./docs/images/social-preview.png" alt="Veil Garden local-first Hide My Email organizer preview" width="100%" />

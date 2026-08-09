@@ -1,4 +1,4 @@
-# 隐邮花园 · Veil Garden
+# 隐邮花园 / Veil Garden — Hide My Email 地址管理
 
 <p align="center">
   <img src="./docs/images/social-preview.png" alt="隐邮花园本地优先 Hide My Email 地址整理工具预览" width="100%" />
