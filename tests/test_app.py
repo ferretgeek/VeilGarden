@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import csv
+import io
 import tempfile
 import threading
 import unittest
@@ -207,6 +209,27 @@ class AppTests(unittest.TestCase):
         )
         self.assertEqual(status, 200)
         self.assertIn(b"leaf-500@example.com", body)
+
+    def test_csv_export_neutralizes_formula_prefixes(self) -> None:
+        self.store.add(
+            {
+                "address": "leaf@example.com",
+                "label": "=HYPERLINK(\"https://example.invalid\")",
+                "note": " @SUM(A1:A2)",
+            }
+        )
+        status, body, _headers = self.request("/api/export?format=csv")
+        self.assertEqual(status, 200)
+        rows = list(csv.DictReader(io.StringIO(body.decode("utf-8-sig"))))
+        self.assertTrue(rows[0]["label"].startswith("'"))
+        self.assertTrue(rows[0]["note"].startswith("'"))
+
+    def test_server_bounds_connections_and_sets_socket_timeout(self) -> None:
+        self.assertEqual(self.httpd.request_queue_size, 5)
+        self.assertEqual(self.httpd.connection_slots._value, 64)
+        status, _body, _headers = self.request("/health", auth=False)
+        self.assertEqual(status, 200)
+        self.assertEqual(self.httpd.connection_slots._value, 64)
 
     def test_remove_requires_exact_confirmation(self) -> None:
         item = self.add_alias()

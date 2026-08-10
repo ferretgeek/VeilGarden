@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Promoted the populated synthetic address garden to the profile and social preview, while retaining the full garden and entry composition as complementary README images.
+- Neutralize spreadsheet-formula prefixes at the CSV boundary and cap direct HTTP connections at 64 worker threads with a 10-second socket deadline.
 
 ## 1.0.1 — 2026-08-09
 

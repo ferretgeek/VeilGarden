@@ -13,10 +13,10 @@ Include a minimal reproduction with reserved domains such as `example.invalid`, 
 ## Deployment baseline
 
 - Keep the default loopback bind for local use.
+- CSV exports neutralize spreadsheet formula prefixes. Direct HTTP mode limits worker threads and applies a socket deadline; internet deployments must still keep the application behind the documented HTTPS reverse proxy.
 - Use an SSH tunnel or HTTPS reverse proxy for remote access.
 - Use a unique access token of at least 24 characters and an exact Host allowlist.
 - Restrict and encrypt the SQLite database and backups.
 - Never publish `.env`, `data/`, exports, proxy logs, or screenshots containing real addresses.
 
 See [`docs/PRIVACY.md`](./docs/PRIVACY.md) for the complete trust boundary.
-

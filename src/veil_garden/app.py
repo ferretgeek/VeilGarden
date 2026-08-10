@@ -4,6 +4,7 @@ import csv
 import io
 import json
 import mimetypes
+import threading
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib.resources import files
@@ -24,6 +25,8 @@ from .store import AliasStore
 
 MAX_REQUEST_BYTES = 256 * 1024
 MAX_RESPONSE_BYTES = 8 * 1024 * 1024
+MAX_CONNECTION_THREADS = 64
+SOCKET_TIMEOUT_SECONDS = 10
 OFFICIAL_GUIDE = "https://support.apple.com/guide/icloud/create-and-edit-addresses-mm1a876f7aed/icloud"
 STATIC_NAMES = {
     "/": "index.html",
@@ -50,7 +53,36 @@ class _GardenHTTPServer(ThreadingHTTPServer):
 
     def __init__(self, address: tuple[str, int], app: VeilGardenServer) -> None:
         self.app = app
+        self.connection_slots = threading.BoundedSemaphore(MAX_CONNECTION_THREADS)
         super().__init__(address, GardenHandler)
+
+    def get_request(self):
+        request, client_address = super().get_request()
+        request.settimeout(SOCKET_TIMEOUT_SECONDS)
+        return request, client_address
+
+    def process_request(self, request, client_address) -> None:
+        if not self.connection_slots.acquire(blocking=False):
+            self.shutdown_request(request)
+            return
+        try:
+            super().process_request(request, client_address)
+        except BaseException:
+            self.connection_slots.release()
+            raise
+
+    def process_request_thread(self, request, client_address) -> None:
+        try:
+            super().process_request_thread(request, client_address)
+        finally:
+            self.connection_slots.release()
+
+
+def _safe_csv_cell(value: str) -> str:
+    candidate = value.lstrip(" \t\r\n")
+    if candidate.startswith(("=", "+", "-", "@")):
+        return "'" + value
+    return value
 
 
 class VeilGardenServer:
@@ -307,12 +339,12 @@ class GardenHandler(BaseHTTPRequestHandler):
             for item in rows:
                 writer.writerow(
                     [
-                        item["address"],
-                        item["label"],
-                        item["status"],
-                        ", ".join(item["tags"]),
-                        item["note"],
-                        item["updated_at"],
+                        _safe_csv_cell(item["address"]),
+                        _safe_csv_cell(item["label"]),
+                        _safe_csv_cell(item["status"]),
+                        _safe_csv_cell(", ".join(item["tags"])),
+                        _safe_csv_cell(item["note"]),
+                        _safe_csv_cell(item["updated_at"]),
                     ]
                 )
             body = ("\ufeff" + output.getvalue()).encode("utf-8")
