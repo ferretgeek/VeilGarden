@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-import json
 import csv
 import io
+import json
 import tempfile
 import threading
+import time
 import unittest
 import urllib.error
 import urllib.request
@@ -214,7 +215,7 @@ class AppTests(unittest.TestCase):
         self.store.add(
             {
                 "address": "leaf@example.com",
-                "label": "=HYPERLINK(\"https://example.invalid\")",
+                "label": '=HYPERLINK("https://example.invalid")',
                 "note": " @SUM(A1:A2)",
             }
         )
@@ -229,6 +230,9 @@ class AppTests(unittest.TestCase):
         self.assertEqual(self.httpd.connection_slots._value, 64)
         status, _body, _headers = self.request("/health", auth=False)
         self.assertEqual(status, 200)
+        deadline = time.monotonic() + 1
+        while self.httpd.connection_slots._value != 64 and time.monotonic() < deadline:
+            time.sleep(0.01)
         self.assertEqual(self.httpd.connection_slots._value, 64)
 
     def test_remove_requires_exact_confirmation(self) -> None:
