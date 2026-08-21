@@ -8,7 +8,7 @@ Security fixes are provided for the latest release on `main`.
 
 Use GitHub **Private Vulnerability Reporting** for vulnerabilities. Do not open a public issue containing an alias, access token, database, export, server address, filesystem path, or private screenshot.
 
-Include a minimal reproduction with reserved domains such as `example.invalid`, the affected version, deployment shape, and expected impact. Never send Apple Account credentials or verification codes; Veil Garden does not need them.
+Include a minimal reproduction with reserved domains such as `example.invalid`, the affected version, deployment shape, and expected impact. Never send Apple Account credentials or verification codes; Hide My Email manager does not need them.
 
 ## Deployment baseline
 

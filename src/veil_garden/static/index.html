@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#eaf4ee" />
-    <meta name="description" content="隐邮花园：本地优先的 Hide My Email 地址整理工具。" />
-    <title>隐邮花园 · Veil Garden</title>
+    <meta name="description" content="本地优先的 Apple Hide My Email 地址整理工具：导入、标签、搜索、备份，地址默认打码。" />
+    <title>隐私邮箱地址管理</title>
     <link rel="icon" href="/favicon.svg?v=1.0.0" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico?v=1.0.0" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1.0.0" />
@@ -16,9 +16,9 @@
   <body data-theme="sky">
     <div class="page-shell">
       <header class="topbar">
-        <a class="brand" href="#top" aria-label="隐邮花园首页">
+        <a class="brand" href="#top" aria-label="隐私邮箱地址管理首页">
           <img src="/favicon.svg?v=1.0.0" alt="" width="42" height="42" />
-          <span><strong>隐邮花园</strong><small>VEIL GARDEN</small></span>
+          <span><strong>隐私邮箱地址</strong><small>HIDE MY EMAIL</small></span>
         </a>
         <div class="top-actions">
           <button class="icon-button" id="privacyButton" type="button" aria-label="揭开地址遮罩" title="隐私遮罩">
@@ -42,11 +42,11 @@
         <section class="hero">
           <div class="hero-copy">
             <p class="eyebrow"><span></span> OFFICIAL-WORKFLOW COMPANION</p>
-            <h1>把替你挡住身份的地址，<br /><em>种进自己的花园。</em></h1>
+            <h1>那些替你挡住身份的地址，<br /><em>总得有个地方记清楚。</em></h1>
             <p class="lead">不接触 Apple 密码，不替你登录。只把从官方界面取得的地址，安静地整理在自己的设备上。</p>
             <div class="hero-actions">
-              <button class="primary-button" id="addButton" type="button">添一枚地址</button>
-              <button class="secondary-button" id="importButton" type="button">导入旧花圃</button>
+              <button class="primary-button" id="addButton" type="button">添加地址</button>
+              <button class="secondary-button" id="importButton" type="button">导入已有地址</button>
               <a class="text-link" id="officialLink" href="https://support.apple.com/guide/icloud/create-and-edit-addresses-mm1a876f7aed/icloud" target="_blank" rel="noreferrer">前往 Apple 官方页面 <span>↗</span></a>
             </div>
           </div>
@@ -60,7 +60,7 @@
         </section>
 
         <section class="stats-grid" aria-label="地址统计">
-          <article><span>全部枝叶</span><strong id="statTotal">—</strong><small>LOCAL RECORDS</small></article>
+          <article><span>全部地址</span><strong id="statTotal">—</strong><small>LOCAL RECORDS</small></article>
           <article><span>正在使用</span><strong id="statActive">—</strong><small>ACTIVE</small></article>
           <article><span>暂时休眠</span><strong id="statResting">—</strong><small>RESTING</small></article>
           <article><span>等待命名</span><strong id="statUnlabeled">—</strong><small>UNLABELED</small></article>
@@ -68,7 +68,7 @@
 
         <section class="workspace">
           <div class="section-heading">
-            <div><p class="kicker">YOUR PRIVATE GARDEN</p><h2>地址花圃</h2></div>
+            <div><p class="kicker">LOCAL INVENTORY</p><h2>地址清单</h2></div>
             <div class="filters">
               <label class="search-field">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg>
@@ -85,8 +85,8 @@
               <div class="alias-list" id="aliasList" aria-live="polite"></div>
               <div class="empty-state" id="emptyState" hidden>
                 <svg viewBox="0 0 96 96" aria-hidden="true"><path d="M48 78V35M48 49c-15-2-24-10-27-24 16 0 25 7 27 21M48 60c14-2 23-10 27-23-15 0-24 7-27 20"/><path d="M28 78h40"/></svg>
-                <h3>这里还没有枝叶</h3><p>从 Apple 官方页面创建地址，再手动添加或批量导入。</p>
-                <button type="button" class="secondary-button" data-action="open-add">添加第一枚</button>
+                <h3>还没有任何地址</h3><p>从 Apple 官方页面创建地址，再手动添加或批量导入。</p>
+                <button type="button" class="secondary-button" data-action="open-add">添加第一个</button>
               </div>
             </div>
 
@@ -100,23 +100,23 @@
         </section>
       </main>
 
-      <footer><span>Veil Garden · 隐邮花园</span><p>Keep the address. Keep the boundary.</p><span id="modeLabel">LOCAL-FIRST</span></footer>
+      <footer><span>隐私邮箱地址管理</span><p>地址留下来，边界也留下来。</p><span id="modeLabel">LOCAL-FIRST</span></footer>
     </div>
 
     <div class="access-gate" id="accessGate" role="dialog" aria-modal="true" aria-labelledby="accessTitle" hidden>
       <form class="gate-card" id="accessForm">
         <img src="/favicon.svg?v=1.0.0" alt="" width="58" height="58" />
-        <p class="kicker">PRIVATE ENTRANCE</p><h2 id="accessTitle">回到自己的花园</h2>
+        <p class="kicker">PRIVATE ENTRANCE</p><h2 id="accessTitle">先确认是你</h2>
         <p>输入启动时显示的访问令牌。它只留在当前页面内存，不写入浏览器存储。</p>
         <label>访问令牌<input id="tokenInput" type="password" autocomplete="off" spellcheck="false" required minlength="24" /></label>
-        <button class="primary-button" type="submit">打开花园</button>
+        <button class="primary-button" type="submit">进入</button>
         <small id="accessError" role="alert"></small>
       </form>
     </div>
 
     <dialog id="aliasDialog" class="form-dialog">
       <form id="aliasForm" method="dialog">
-        <div class="dialog-head"><div><p class="kicker">LOCAL RECORD</p><h2 id="aliasDialogTitle">添一枚地址</h2></div><button class="close-button" type="button" data-close-dialog="aliasDialog" aria-label="关闭">×</button></div>
+        <div class="dialog-head"><div><p class="kicker">LOCAL RECORD</p><h2 id="aliasDialogTitle">添加地址</h2></div><button class="close-button" type="button" data-close-dialog="aliasDialog" aria-label="关闭">×</button></div>
         <input id="aliasId" type="hidden" />
         <label class="full">地址<input id="addressInput" type="email" maxlength="320" autocomplete="off" placeholder="leaf@example.com" required /></label>
         <label>名字 / 用途<input id="labelInput" type="text" maxlength="80" placeholder="例如：阅读订阅" /></label>
@@ -130,7 +130,7 @@
 
     <dialog id="importDialog" class="form-dialog narrow">
       <form id="importForm" method="dialog">
-        <div class="dialog-head"><div><p class="kicker">BRING THEM HOME</p><h2>导入旧花圃</h2></div><button class="close-button" type="button" data-close-dialog="importDialog" aria-label="关闭">×</button></div>
+        <div class="dialog-head"><div><p class="kicker">BRING THEM HOME</p><h2>导入已有地址</h2></div><button class="close-button" type="button" data-close-dialog="importDialog" aria-label="关闭">×</button></div>
         <p class="dialog-copy">每行一个地址；也可写成 <code>地址 | 名字 | 标签1,标签2</code>。重复项会被安静跳过。</p>
         <label class="file-drop">选择 TXT / CSV 文件<input id="importFile" type="file" accept=".txt,.csv,text/plain,text/csv" /></label>
         <label class="full">或直接粘贴<textarea id="importText" rows="10" maxlength="262144" placeholder="quiet.leaf@example.com | 阅读订阅 | 阅读,每周"></textarea></label>

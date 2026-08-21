@@ -3,7 +3,7 @@
 ## 数据流 / Data flow
 
 1. 用户在 Apple 官方界面创建或管理 Hide My Email 地址。 / The user creates or manages an address in Apple's official interface.
-2. 用户主动把地址、标签、备注和本地状态输入隐邮花园。 / The user deliberately enters an address, label, note, and local state in Veil Garden.
+2. 用户主动把地址、标签、备注和本地状态输入隐私邮箱地址管理。 / The user deliberately enters an address, label, note, and local state in Hide My Email manager.
 3. 浏览器通过同源、Bearer 保护的本地 API 与自托管服务通信。 / The browser talks to the self-hosted service through a same-origin, Bearer-protected API.
 4. 正式模式写入本地 SQLite；没有云同步、遥测或第三方运行时请求。 / Production mode writes local SQLite; there is no cloud sync, telemetry, or third-party runtime request.
 
@@ -32,9 +32,9 @@ The SQLite database stores complete addresses, labels, and notes. These can corr
 
 ## 威胁边界 / Threat boundary
 
-隐邮花园不能保护已经控制主机、浏览器进程、反向代理、备份或访问令牌的攻击者；也不能验证用户导入的地址是否真的由 Apple 生成。它不加密数据库内容本身。
+隐私邮箱地址管理不能保护已经控制主机、浏览器进程、反向代理、备份或访问令牌的攻击者；也不能验证用户导入的地址是否真的由 Apple 生成。它不加密数据库内容本身。
 
-Veil Garden cannot protect against an attacker who controls the host, browser process, reverse proxy, backup, or access token. It cannot prove an imported address came from Apple, and it does not encrypt database contents itself.
+Hide My Email manager cannot protect against an attacker who controls the host, browser process, reverse proxy, backup, or access token. It cannot prove an imported address came from Apple, and it does not encrypt database contents itself.
 
 发现漏洞请使用仓库的 GitHub Private Vulnerability Reporting，不要在公开 Issue 中附生产数据库、地址、令牌或截图。 / Report vulnerabilities through GitHub Private Vulnerability Reporting. Never attach production databases, addresses, tokens, or sensitive screenshots to a public issue.
 

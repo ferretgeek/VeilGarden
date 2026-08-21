@@ -20,8 +20,8 @@ classifiers = [
 dependencies = []
 
 [project.urls]
-Homepage = "https://github.com/ferretgeek/VeilGarden"
-Issues = "https://github.com/ferretgeek/VeilGarden/issues"
+Homepage = "https://github.com/ferretgeek/hide-my-email-manager"
+Issues = "https://github.com/ferretgeek/hide-my-email-manager/issues"
 
 [project.scripts]
 veil-garden = "veil_garden.__main__:main"

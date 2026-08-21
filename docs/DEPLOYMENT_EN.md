@@ -1,6 +1,6 @@
 # Deployment and operations
 
-Veil Garden stores complete email addresses that can reveal a user's activity. It listens on `127.0.0.1` by default. Never expose it to a LAN or the public internet without HTTPS, a strong access token, and an exact Host allowlist.
+Hide My Email manager stores complete email addresses that can reveal a user's activity. It listens on `127.0.0.1` by default. Never expose it to a LAN or the public internet without HTTPS, a strong access token, and an exact Host allowlist.
 
 ## Environment
 
@@ -29,7 +29,7 @@ Use `.\.venv\Scripts\Activate.ps1` in Windows PowerShell. Stop with `Ctrl+C`. Da
 
 ## SSH tunnel
 
-Keep Veil Garden on the server loopback interface and forward it locally:
+Keep Hide My Email manager on the server loopback interface and forward it locally:
 
 ```bash
 ssh -N -L 8768:127.0.0.1:8768 user@example-host

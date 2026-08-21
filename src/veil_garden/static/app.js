@@ -174,7 +174,7 @@
     state.editing = null;
     $("#aliasForm").reset();
     $("#aliasId").value = "";
-    $("#aliasDialogTitle").textContent = "添一枚地址";
+    $("#aliasDialogTitle").textContent = "添加地址";
     $("#removeButton").hidden = true;
   }
 
